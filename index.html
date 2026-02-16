@@ -1697,7 +1697,7 @@
                 id: 'index-beginner',
                 title: '投資初心者のためのインデックス投資ロードマップ',
                 subtitle: '口座開設から積立設定まで完全ガイド',
-                price: 480,
+                price: 600,
                 icon: '📈',
                 shortTitle: 'INDEX投資',
                 description: '投資初心者向け。インデックス投資の基礎、NISA活用、口座開設、積立設定、出口戦略までを網羅した完全ロードマップ。全62枚のカードで体系的に学べます。',
@@ -1774,7 +1774,7 @@
                 id: 'crypto-beginner',
                 title: '仮想通貨・ブロックチェーン完全入門ロードマップ',
                 subtitle: 'ビットコインからDeFi・NFTまで体系的に学ぶ',
-                price: 680,
+                price: 800,
                 icon: '₿',
                 shortTitle: '仮想通貨',
                 description: '仮想通貨の基礎からDeFi、NFT、セキュリティまで。全50枚のカードで暗号資産の世界を体系的に学べます。',
@@ -1878,6 +1878,9 @@
             const [activeRoadmapFilter, setActiveRoadmapFilter] = useState(null); // Pro feature: filter cards to specific roadmap
 
             const basicLimit = 360; // Updated to match actual card count
+            const hasFullAccess = userPlan === 'annual' || userPlan === 'lifetime';
+            const hasSingleAccess = userPlan === 'single';
+            const hasRoadmapAccess = (bundleId) => hasFullAccess || purchasedBundles.includes(bundleId);
             const DAILY_REPLENISH_AMOUNT = 5;
             const REPLENISH_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
 
@@ -2161,7 +2164,7 @@
 
             // Check if paywall should be shown (not for roadmap viewing or purchased bundle cards)
             const totalCardsViewed = understoodCards.length + unclearCards.length;
-            const cardLimit = userPlan === 'free' ? freeLimit : (userPlan === 'basic' ? basicLimit : allCards.length);
+            const cardLimit = userPlan === 'free' ? freeLimit : (hasFullAccess ? allCards.length : (hasSingleAccess ? basicLimit : allCards.length));
 
             // Check if currently viewing bundle cards (unlimited access for purchased bundles)
             const isViewingBundleCards = useMemo(() => {
@@ -2171,7 +2174,7 @@
 
             // Don't show paywall if viewing purchased bundle cards
             const shouldShowPaywall = userPlan === 'free' && totalCardsViewed >= freeLimit && viewMode === 'swipe' && !isViewingBundleCards;
-            const isPro = userPlan === 'pro';
+            const isPro = hasFullAccess;
 
 
             // Randomized order for Today's Learning (shuffled once per session/load)
@@ -2214,7 +2217,7 @@
                     // Only include basic briefing cards
                     if (!basicCardIds.includes(c.id)) return false;
                     // Free users: exclude Pro-only cards (advanced strategies, FX, etc.)
-                    if (!isPro && c.isPro) return false;
+                    if (!hasFullAccess && c.isPro) return false;
                     return true;
                 });
 
@@ -2314,7 +2317,7 @@
             // Subscription Paywall
             if (viewMode === 'subscription' || shouldShowPaywall) {
                 return (
-                    <div className="min-h-screen bg-obsidian pt-24 pb-20 px-4 sm:px-8 relative overflow-hidden">
+                    <div className="min-h-screen bg-obsidian pt-24 pb-20 px-6 sm:px-8 relative overflow-hidden">
                         {/* Dynamic Background Lighting */}
                         <div className="fixed inset-0 pointer-events-none overflow-hidden">
                             <div className="absolute top-[5%] left-1/4 w-[600px] h-[600px] bg-gold/10 rounded-full blur-[150px] opacity-40" />
@@ -2346,44 +2349,63 @@
                                 <p className="text-sm text-dim">学習進捗率</p>
                             </motion.div>
 
-                            {/* Subscription Plans */}
+                            {/* Subscription Plans - 3 Tier */}
                             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
                                 className="space-y-4 mb-8">
 
-                                {/* Pro Plan */}
+                                {/* Annual Plan ★本命 */}
                                 <div className="bg-gradient-to-br from-gold/20 to-amber-500/10 border-2 border-gold rounded-sm p-6 relative overflow-hidden">
                                     <div className="absolute top-4 right-4 text-[10px] bg-gold text-black px-3 py-1 rounded-sm font-bold">人気No.1</div>
-                                    <h3 className="text-2xl font-black text-platinum mb-2">Pro</h3>
-                                    <div className="flex items-end gap-2 mb-4">
-                                        <span className="text-4xl font-black text-gold">¥980</span>
-                                        <span className="text-dim text-sm mb-1">/ 買い切り</span>
+                                    <h3 className="text-2xl font-black text-platinum mb-1">年間パス</h3>
+                                    <p className="text-xs text-dim mb-3">全コンテンツ完全アクセス</p>
+                                    <div className="flex items-end gap-2 mb-1">
+                                        <span className="text-4xl font-black text-gold">¥3,200</span>
+                                        <span className="text-dim text-sm mb-1">/ 年</span>
                                     </div>
+                                    <p className="text-xs text-emerald-400 mb-4">月あたりたったの <span className="font-bold">¥267</span></p>
                                     <ul className="space-y-3 mb-6">
                                         <li className="flex items-center gap-3 text-sm text-platinum/80"><span className="text-gold">✓</span>全{allCards.length}枚の学習カード</li>
-                                        <li className="flex items-center gap-3 text-sm text-platinum/80"><span className="text-gold">✓</span>アセット別ロードマップ学習</li>
-                                        <li className="flex items-center gap-3 text-sm text-platinum/80"><span className="text-gold">✓</span>Grok AIによる質問回答</li>
-                                        <li className="flex items-center gap-3 text-sm text-platinum/80"><span className="text-gold">✓</span>新しい学習コンテンツの先行アクセス</li>
+                                        <li className="flex items-center gap-3 text-sm text-platinum/80"><span className="text-gold">✓</span>全ロードマップ完全アクセス</li>
+                                        <li className="flex items-center gap-3 text-sm text-platinum/80"><span className="text-gold">✓</span>AI市場分析</li>
+                                        <li className="flex items-center gap-3 text-sm text-platinum/80"><span className="text-gold">✓</span>具体的ポートフォリオ提案</li>
                                     </ul>
-                                    <button onClick={() => { onUpgrade('pro'); setViewMode('swipe'); }}
-                                        className="w-full py-4 bg-gold text-black font-bold text-lg rounded-sm hover:bg-amber-400 transition-colors">
-                                        Proを始める
+                                    <button onClick={() => { onUpgrade('annual'); setViewMode('swipe'); }}
+                                        className="w-full py-4 bg-gold text-black font-bold text-lg rounded-sm hover:bg-amber-400 transition-colors shadow-lg shadow-gold/20">
+                                        年間パスを始める
                                     </button>
                                 </div>
 
-                                {/* Basic Plan */}
-                                <div className="bg-ash/50 border border-white/10 rounded-sm p-6">
-                                    <h3 className="text-xl font-bold text-platinum mb-2">Basic</h3>
+                                {/* Lifetime Plan */}
+                                <div className="bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/20 rounded-sm p-6 relative overflow-hidden group hover:border-gold/40 transition-all duration-300">
+                                    <div className="absolute top-4 right-4 text-[10px] bg-emerald-500 text-white px-3 py-1 rounded-sm font-bold">BEST VALUE</div>
+                                    <h3 className="text-xl font-bold text-platinum mb-1">ライフタイム</h3>
+                                    <p className="text-xs text-dim mb-3">一度きりの投資で永久アクセス</p>
                                     <div className="flex items-end gap-2 mb-4">
-                                        <span className="text-3xl font-bold text-platinum">¥480</span>
+                                        <span className="text-3xl font-bold text-platinum">¥8,800</span>
                                         <span className="text-dim text-sm mb-1">/ 買い切り</span>
                                     </div>
                                     <ul className="space-y-2 mb-6">
-                                        <li className="flex items-center gap-3 text-sm text-platinum/70"><span className="text-emerald-400">✓</span>{basicCards.length}枚の学習カード</li>
-                                        <li className="flex items-center gap-3 text-sm text-platinum/70"><span className="text-emerald-400">✓</span>ロードマップ閲覧</li>
+                                        <li className="flex items-center gap-3 text-sm text-platinum/70"><span className="text-emerald-400">✓</span>年間パスの全機能</li>
+                                        <li className="flex items-center gap-3 text-sm text-platinum/70"><span className="text-emerald-400">✓</span>将来のアップデート永久保証</li>
+                                        <li className="flex items-center gap-3 text-sm text-platinum/70"><span className="text-emerald-400">✓</span>3年間使えば年間パスよりお得</li>
                                     </ul>
-                                    <button onClick={() => { onUpgrade('basic'); setViewMode('swipe'); }}
+                                    <button onClick={() => { onUpgrade('lifetime'); setViewMode('swipe'); }}
                                         className="w-full py-3 border border-white/30 text-platinum font-bold rounded-sm hover:border-gold hover:text-gold transition-colors">
-                                        Basicを始める
+                                        永久アクセスを手に入れる
+                                    </button>
+                                </div>
+
+                                {/* Single Roadmap */}
+                                <div className="bg-ash/30 border border-white/10 rounded-sm p-6">
+                                    <h3 className="text-lg font-bold text-platinum mb-1">ロードマップ単体</h3>
+                                    <p className="text-xs text-dim mb-3">気になるテーマだけ学ぶ</p>
+                                    <div className="flex items-end gap-2 mb-4">
+                                        <span className="text-2xl font-bold text-platinum">¥600〜</span>
+                                        <span className="text-dim text-sm mb-1">/ 1ロードマップ</span>
+                                    </div>
+                                    <button onClick={() => { setViewMode('roadmap'); }}
+                                        className="w-full py-3 bg-white/5 border border-white/20 text-platinum text-sm font-bold rounded-sm hover:bg-white/10 transition-colors">
+                                        ロードマップを選ぶ →
                                     </button>
                                 </div>
                             </motion.div>
@@ -2391,7 +2413,7 @@
                             {/* Benefits */}
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
                                 className="text-center">
-                                <p className="text-xs text-dim mb-2">💳 いつでもキャンセル可能</p>
+                                <p className="text-xs text-dim mb-2">💳 いつでもキャンセル可能（年間パス）</p>
                                 <p className="text-xs text-dim">📱 全デバイス対応</p>
                             </motion.div>
 
@@ -2591,21 +2613,21 @@
                                     const isProRoadmap = roadmap.some(step => step.isPro);
 
                                     // Access control logic:
-                                    // Free: Can view all roadmaps, but items are blurred and not clickable for non-basic roadmaps
-                                    // Basic: Full access to NISA~不動産 (non-Pro roadmaps), Pro roadmaps are locked
-                                    // Pro: Full access to everything
-                                    const isBasicOrAbove = userPlan === 'basic' || userPlan === 'pro';
+                                    // Free: Can view all roadmaps, but items are blurred and not clickable
+                                    // Single: Full access to purchased roadmaps only
+                                    // Annual/Lifetime: Full access to everything
+                                    const isFullUser = hasFullAccess;
                                     const isFree = userPlan === 'free';
-                                    const isLocked = isProRoadmap && !isPro;
-                                    const shouldBlurItems = isFree && !isComplete; // Free users see blurred items (except completed ones)
+                                    const isLocked = isProRoadmap && !isFullUser;
+                                    const shouldBlurItems = (isFree || (hasSingleAccess && isProRoadmap)) && !isComplete;
 
                                     return (
                                         <motion.div key={assetName} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.15 }}
                                             onClick={() => {
                                                 if (isLocked) {
                                                     setViewMode('subscription');
-                                                } else if (isFree && !isProRoadmap) {
-                                                    // Free users can click non-Pro roadmaps but show upgrade prompt
+                                                } else if (isFree) {
+                                                    // Free users see upgrade prompt
                                                     setViewMode('subscription');
                                                 } else {
                                                     setSelectedRoadmap(assetName);
@@ -2620,10 +2642,10 @@
                                                     <span>👑</span> PRO
                                                 </div>
                                             )}
-                                            {/* Basic unlock badge for non-Pro roadmaps when user is Free */}
+                                            {/* Badge for locked roadmaps */}
                                             {!isProRoadmap && isFree && (
                                                 <div className="absolute top-3 right-3 flex items-center gap-1 bg-stone border border-white/10 text-platinum text-[10px] font-bold px-2 py-0.5 rounded-sm">
-                                                    BASIC
+                                                    年間パスで開放
                                                 </div>
                                             )}
                                             {/* Lock overlay for Pro roadmaps on non-Pro users */}
@@ -2631,7 +2653,7 @@
                                                 <div className="absolute inset-0 bg-obsidian/60 backdrop-blur-[1px] flex items-center justify-center z-20">
                                                     <div className="text-center">
                                                         <span className="text-2xl">🔒</span>
-                                                        <p className="text-xs text-amber-400 mt-1 font-medium">Proで解放</p>
+                                                        <p className="text-xs text-amber-400 mt-1 font-medium">年間パス or 単体購入で解放</p>
                                                     </div>
                                                 </div>
                                             )}
@@ -2669,7 +2691,7 @@
                                                 {/* Upgrade hint for Free users on non-Pro roadmaps */}
                                                 {isFree && !isProRoadmap && (
                                                     <div className="mt-4 pt-3 border-t border-white/10 text-center">
-                                                        <p className="text-xs text-dim">🔓 ベーシックで開放</p>
+                                                        <p className="text-xs text-dim">🔓 年間パスで全て開放</p>
                                                     </div>
                                                 )}
                                             </div>
@@ -2939,7 +2961,7 @@
                                                                 📈 このコースを学習する
                                                             </button>
                                                         ) : (
-                                                            userPlan === 'pro' ? (
+                                                            hasFullAccess ? (
                                                                 <button onClick={() => {
                                                                     const roadmapCards = assetRoadmaps[selectedRoadmap].flatMap(step => step.cards);
                                                                     setActiveRoadmapFilter(roadmapCards);
@@ -2991,7 +3013,7 @@
                                     <button onClick={() => setViewMode('roadmap')}
                                         className="group relative overflow-hidden bg-gold/10 hover:bg-gold/20 text-gold text-xs font-bold px-4 py-2 rounded-full border border-gold/40 transition-all duration-300 hover:shadow-[0_0_15px_rgba(218,165,32,0.3)] flex items-center gap-2">
                                         <span className="relative z-10">📍 学習ロードマップを見る</span>
-                                        {userPlan === 'pro' && <span className="bg-gradient-to-r from-amber-600 to-amber-400 text-black text-[9px] px-1.5 py-0.5 rounded-sm font-black relative z-10">PRO</span>}
+                                        {hasFullAccess && <span className="bg-gradient-to-r from-amber-600 to-amber-400 text-black text-[9px] px-1.5 py-0.5 rounded-sm font-black relative z-10">PRO</span>}
                                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                                     </button>
                                 </div>
@@ -3242,6 +3264,7 @@
         };
 
         const PortfolioCreator = ({ userProfile, onNavigate, userPlan, onUpgrade, portfolioSettings, onSave }) => {
+            const hasFullAccess = userPlan === 'annual' || userPlan === 'lifetime';
             const [principal, setPrincipal] = useState(portfolioSettings?.principal || 1000000);
             const [monthly, setMonthly] = useState(portfolioSettings?.monthly || 30000);
             const [allocation, setAllocation] = useState(portfolioSettings?.allocation || userProfile?.allocation || { safe: 30, balanced: 40, growth: 30 });
@@ -3449,7 +3472,7 @@
 
                                 {/* Projection */}
                                 <div className="bg-ash/50 border border-white/10 rounded-sm p-8 relative overflow-hidden group">
-                                    <div className={`relative transition-all duration-500 ${userPlan === 'basic' ? 'filter blur-sm opacity-50 grayscale-[0.5]' : ''}`}>
+                                    <div className={`relative transition-all duration-500 ${!hasFullAccess && userPlan !== 'free' ? 'filter blur-sm opacity-50 grayscale-[0.5]' : ''}`}>
                                         <h3 className="text-lg font-bold text-platinum mb-2">資産推移イメージ（参考値）</h3>
                                         <p className="text-[10px] text-dim mb-6">※ 以下は過去の平均リターンに基づく仮想の計算例であり、将来の運用結果を保証するものではありません。</p>
                                         <div className="flex items-end justify-between mb-8">
@@ -3481,7 +3504,7 @@
                                     </div>
 
                                     {/* Pro Overlay */}
-                                    {userPlan === 'basic' && (
+                                    {!hasFullAccess && userPlan !== 'free' && (
                                         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center">
                                             <div className="bg-black/40 backdrop-blur-md border border-gold/30 p-8 rounded-sm max-w-sm w-full shadow-2xl">
                                                 <p className="text-gold text-[10px] tracking-[0.3em] uppercase mb-4">PREMIUM INSIGHT</p>
@@ -4537,7 +4560,7 @@
                             userProfile={userProfile}
                             onNavigate={handleNavigate}
                             userPlan={userPlan}
-                            onUpgrade={() => handleSetPlan('pro')}
+                            onUpgrade={() => handleSetPlan('annual')}
                             portfolioSettings={portfolioSettings}
                             onSave={handleUpdatePortfolioSettings}
                         />;
