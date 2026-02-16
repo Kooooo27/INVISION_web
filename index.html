@@ -1415,7 +1415,8 @@
                                     <p className="text-2xl text-gold">{getUserTitle(profile, 0)}</p>
                                 </div>
                             </div>
-                            <p className="text-lg text-platinum/80 mb-8">{profile.description}</p>
+                            <p className="text-lg text-platinum/80 mb-4">{profile.description}</p>
+                            <p className="text-dim text-xs leading-loose mb-8">自己分析と投資知識の学習をもとに、資産配分の考え方を学びます。<br />※ このシミュレーションは学習目的の参考値であり、実際の運用結果を保証するものではありません。</p>
                             <div className="flex flex-wrap gap-2 mb-8">
                                 {profile.traits.map((t, i) => <span key={i} className="text-xs bg-ash border border-white/10 px-3 py-1 rounded-full text-platinum/70">{t}</span>)}
                             </div>
@@ -1879,8 +1880,9 @@
 
             const basicLimit = 360; // Updated to match actual card count
             const hasFullAccess = userPlan === 'annual' || userPlan === 'lifetime';
-            const hasSingleAccess = userPlan === 'single';
-            const hasRoadmapAccess = (bundleId) => hasFullAccess || purchasedBundles.includes(bundleId);
+            const isLifetime = userPlan === 'lifetime';
+            const hasRoadmapAccess = (name) => hasFullAccess || purchasedBundles.includes(name);
+            const hasBundleAccess = (bundleId) => isLifetime || purchasedBundles.includes(bundleId);
             const DAILY_REPLENISH_AMOUNT = 5;
             const REPLENISH_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
 
@@ -2164,7 +2166,7 @@
 
             // Check if paywall should be shown (not for roadmap viewing or purchased bundle cards)
             const totalCardsViewed = understoodCards.length + unclearCards.length;
-            const cardLimit = userPlan === 'free' ? freeLimit : (hasFullAccess ? allCards.length : (hasSingleAccess ? basicLimit : allCards.length));
+            const cardLimit = userPlan === 'free' ? freeLimit : allCards.length;
 
             // Check if currently viewing bundle cards (unlimited access for purchased bundles)
             const isViewingBundleCards = useMemo(() => {
@@ -2184,8 +2186,8 @@
 
             // Personalize cards based on profile and understanding
             const getPersonalizedCards = () => {
-                // Filter out Pro cards for non-Pro users
-                const accessibleCards = isPro ? allCards : basicCards;
+                // Include all cards for paid users, basic only for free
+                const accessibleCards = hasFullAccess ? allCards : basicCards;
 
                 // If filtering by roadmap (Pro feature)
                 if (activeRoadmapFilter && activeRoadmapFilter.length > 0) {
@@ -2197,12 +2199,19 @@
                 }
 
                 // Today's Learning Mode (Random Order)
-                // Filter out bundle cards - allow only basic Briefing cards for random swipe
-                // Note: accessibleCards might contain bundle cards if user is Pro, but we want to exclude them from "Today's Learning" random mix
-                // unless they are explicitly selected via Roadmap Mode.
+                // Filter cards based on user plan and roadmap access
 
                 // Identify basic cards (from briefingCards)
                 const basicCardIds = (window.briefingCards || []).map(c => c.id);
+
+                // Get card IDs from non-Pro roadmaps (NISA~不動産)
+                const nonProRoadmapCardIds = new Set();
+                Object.entries(assetRoadmaps).forEach(([name, steps]) => {
+                    const isProRM = steps.some(s => s.isPro);
+                    if (!isProRM) {
+                        steps.forEach(step => step.cards.forEach(id => nonProRoadmapCardIds.add(id)));
+                    }
+                });
 
                 // Check if card is from premium bundles (index, crypto)
                 const isPremiumBundleCard = (id) => {
@@ -2210,15 +2219,21 @@
                         (window.cryptoBundleCards || []).some(c => c.id === id);
                 };
 
-                // Filter cards based on user plan
+                // Plan-based card filtering
                 let cards = accessibleCards.filter(c => {
-                    // Always exclude premium bundle cards from random swipe
-                    if (isPremiumBundleCard(c.id)) return false;
-                    // Only include basic briefing cards
-                    if (!basicCardIds.includes(c.id)) return false;
-                    // Free users: exclude Pro-only cards (advanced strategies, FX, etc.)
-                    if (!hasFullAccess && c.isPro) return false;
-                    return true;
+                    if (userPlan === 'free') {
+                        // Free: only cards from non-Pro roadmaps (NISA~不動産), no bundles
+                        if (!basicCardIds.includes(c.id)) return false;
+                        return nonProRoadmapCardIds.has(c.id);
+                    } else if (userPlan === 'annual') {
+                        // Annual: all briefing cards (non-Pro + Pro roadmaps), no bundles
+                        if (isPremiumBundleCard(c.id)) return false;
+                        if (!basicCardIds.includes(c.id)) return false;
+                        return true;
+                    } else {
+                        // Lifetime: everything including bundle cards
+                        return true;
+                    }
                 });
 
                 // Use shuffled order
@@ -2362,12 +2377,11 @@
                                         <span className="text-4xl font-black text-gold">¥3,200</span>
                                         <span className="text-dim text-sm mb-1">/ 年</span>
                                     </div>
-                                    <p className="text-xs text-emerald-400 mb-4">月あたりたったの <span className="font-bold">¥267</span></p>
+                                    <p className="text-xs text-emerald-400 mb-4">月あたり <span className="font-bold">¥267</span></p>
                                     <ul className="space-y-3 mb-6">
                                         <li className="flex items-center gap-3 text-sm text-platinum/80"><span className="text-gold">✓</span>全{allCards.length}枚の学習カード</li>
-                                        <li className="flex items-center gap-3 text-sm text-platinum/80"><span className="text-gold">✓</span>全ロードマップ完全アクセス</li>
-                                        <li className="flex items-center gap-3 text-sm text-platinum/80"><span className="text-gold">✓</span>AI市場分析</li>
-                                        <li className="flex items-center gap-3 text-sm text-platinum/80"><span className="text-gold">✓</span>具体的ポートフォリオ提案</li>
+                                        <li className="flex items-center gap-3 text-sm text-platinum/80"><span className="text-gold">✓</span>全ロードマップ解放（バンドル除く）</li>
+                                        <li className="flex items-center gap-3 text-sm text-platinum/80"><span className="text-gold">✓</span>高度な戦略・FX・仮想通貨等を学べる</li>
                                     </ul>
                                     <button onClick={() => { onUpgrade('annual'); setViewMode('swipe'); }}
                                         className="w-full py-4 bg-gold text-black font-bold text-lg rounded-sm hover:bg-amber-400 transition-colors shadow-lg shadow-gold/20">
@@ -2381,13 +2395,13 @@
                                     <h3 className="text-xl font-bold text-platinum mb-1">ライフタイム</h3>
                                     <p className="text-xs text-dim mb-3">一度きりの投資で永久アクセス</p>
                                     <div className="flex items-end gap-2 mb-4">
-                                        <span className="text-3xl font-bold text-platinum">¥8,800</span>
+                                        <span className="text-3xl font-bold text-platinum">¥6,700</span>
                                         <span className="text-dim text-sm mb-1">/ 買い切り</span>
                                     </div>
                                     <ul className="space-y-2 mb-6">
                                         <li className="flex items-center gap-3 text-sm text-platinum/70"><span className="text-emerald-400">✓</span>年間パスの全機能</li>
+                                        <li className="flex items-center gap-3 text-sm text-platinum/70"><span className="text-emerald-400">✓</span>全バンドルコース解放</li>
                                         <li className="flex items-center gap-3 text-sm text-platinum/70"><span className="text-emerald-400">✓</span>将来のアップデート永久保証</li>
-                                        <li className="flex items-center gap-3 text-sm text-platinum/70"><span className="text-emerald-400">✓</span>3年間使えば年間パスよりお得</li>
                                     </ul>
                                     <button onClick={() => { onUpgrade('lifetime'); setViewMode('swipe'); }}
                                         className="w-full py-3 border border-white/30 text-platinum font-bold rounded-sm hover:border-gold hover:text-gold transition-colors">
@@ -2398,11 +2412,12 @@
                                 {/* Single Roadmap */}
                                 <div className="bg-ash/30 border border-white/10 rounded-sm p-6">
                                     <h3 className="text-lg font-bold text-platinum mb-1">ロードマップ単体</h3>
-                                    <p className="text-xs text-dim mb-3">気になるテーマだけ学ぶ</p>
-                                    <div className="flex items-end gap-2 mb-4">
-                                        <span className="text-2xl font-bold text-platinum">¥600〜</span>
+                                    <p className="text-xs text-dim mb-3">NISA〜不動産のテーマを個別学習</p>
+                                    <div className="flex items-end gap-2 mb-2">
+                                        <span className="text-2xl font-bold text-platinum">¥600</span>
                                         <span className="text-dim text-sm mb-1">/ 1ロードマップ</span>
                                     </div>
+                                    <p className="text-[10px] text-dim mb-4">※ 高度な戦略以上は年間パス or ライフタイムで解放</p>
                                     <button onClick={() => { setViewMode('roadmap'); }}
                                         className="w-full py-3 bg-white/5 border border-white/20 text-platinum text-sm font-bold rounded-sm hover:bg-white/10 transition-colors">
                                         ロードマップを選ぶ →
@@ -2613,22 +2628,29 @@
                                     const isProRoadmap = roadmap.some(step => step.isPro);
 
                                     // Access control logic:
-                                    // Free: Can view all roadmaps, but items are blurred and not clickable
-                                    // Single: Full access to purchased roadmaps only
-                                    // Annual/Lifetime: Full access to everything
-                                    const isFullUser = hasFullAccess;
+                                    // Free: Non-Pro roadmaps purchasable for ¥600, Pro roadmaps locked
+                                    // Purchased: Individual non-Pro roadmaps unlocked via purchasedBundles
+                                    // Annual: All roadmaps unlocked (not bundles)
+                                    // Lifetime: Everything including bundles
                                     const isFree = userPlan === 'free';
-                                    const isLocked = isProRoadmap && !isFullUser;
-                                    const shouldBlurItems = (isFree || (hasSingleAccess && isProRoadmap)) && !isComplete;
+                                    const isPurchased = purchasedBundles.includes(assetName);
+                                    const canAccess = hasFullAccess || isPurchased;
+                                    const isProLocked = isProRoadmap && !hasFullAccess;
+                                    const isNonProUnpurchased = !isProRoadmap && isFree && !isPurchased;
+                                    const shouldBlurItems = (isProLocked || (isFree && !isPurchased)) && !isComplete;
 
                                     return (
                                         <motion.div key={assetName} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.15 }}
                                             onClick={() => {
-                                                if (isLocked) {
+                                                if (isProLocked) {
+                                                    // Pro roadmaps → subscription page
                                                     setViewMode('subscription');
-                                                } else if (isFree) {
-                                                    // Free users see upgrade prompt
-                                                    setViewMode('subscription');
+                                                } else if (isNonProUnpurchased) {
+                                                    // Non-Pro, free, not purchased → purchase confirmation
+                                                    if (confirm(`「${assetName}」ロードマップを¥600で購入しますか？`)) {
+                                                        onPurchaseBundle(assetName);
+                                                        setSelectedRoadmap(assetName);
+                                                    }
                                                 } else {
                                                     setSelectedRoadmap(assetName);
                                                 }
@@ -2642,18 +2664,24 @@
                                                     <span>👑</span> PRO
                                                 </div>
                                             )}
-                                            {/* Badge for locked roadmaps */}
-                                            {!isProRoadmap && isFree && (
-                                                <div className="absolute top-3 right-3 flex items-center gap-1 bg-stone border border-white/10 text-platinum text-[10px] font-bold px-2 py-0.5 rounded-sm">
-                                                    年間パスで開放
+                                            {/* Price badge for unpurchased non-Pro roadmaps */}
+                                            {isNonProUnpurchased && (
+                                                <div className="absolute top-3 right-3 flex items-center gap-1 bg-gold/20 border border-gold/40 text-gold text-[10px] font-bold px-2 py-0.5 rounded-sm">
+                                                    ¥600
                                                 </div>
                                             )}
-                                            {/* Lock overlay for Pro roadmaps on non-Pro users */}
-                                            {isLocked && (
+                                            {/* Purchased badge */}
+                                            {isPurchased && !isComplete && !hasFullAccess && (
+                                                <div className="absolute top-3 right-3 flex items-center gap-1 bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-sm">
+                                                    購入済み
+                                                </div>
+                                            )}
+                                            {/* Lock overlay for Pro roadmaps */}
+                                            {isProLocked && (
                                                 <div className="absolute inset-0 bg-obsidian/60 backdrop-blur-[1px] flex items-center justify-center z-20">
                                                     <div className="text-center">
                                                         <span className="text-2xl">🔒</span>
-                                                        <p className="text-xs text-amber-400 mt-1 font-medium">年間パス or 単体購入で解放</p>
+                                                        <p className="text-xs text-amber-400 mt-1 font-medium">年間パス or ライフタイムで解放</p>
                                                     </div>
                                                 </div>
                                             )}
@@ -2689,9 +2717,9 @@
                                                     })}
                                                 </div>
                                                 {/* Upgrade hint for Free users on non-Pro roadmaps */}
-                                                {isFree && !isProRoadmap && (
+                                                {isFree && !isProRoadmap && !isPurchased && (
                                                     <div className="mt-4 pt-3 border-t border-white/10 text-center">
-                                                        <p className="text-xs text-dim">🔓 年間パスで全て開放</p>
+                                                        <p className="text-xs text-gold/70">💰 ¥600で単体購入可能</p>
                                                     </div>
                                                 )}
                                             </div>
@@ -3472,7 +3500,7 @@
 
                                 {/* Projection */}
                                 <div className="bg-ash/50 border border-white/10 rounded-sm p-8 relative overflow-hidden group">
-                                    <div className={`relative transition-all duration-500 ${!hasFullAccess && userPlan !== 'free' ? 'filter blur-sm opacity-50 grayscale-[0.5]' : ''}`}>
+                                    <div className={`relative transition-all duration-500 ${!hasFullAccess ? 'filter blur-sm opacity-50 grayscale-[0.5]' : ''}`}>
                                         <h3 className="text-lg font-bold text-platinum mb-2">資産推移イメージ（参考値）</h3>
                                         <p className="text-[10px] text-dim mb-6">※ 以下は過去の平均リターンに基づく仮想の計算例であり、将来の運用結果を保証するものではありません。</p>
                                         <div className="flex items-end justify-between mb-8">
@@ -3504,7 +3532,7 @@
                                     </div>
 
                                     {/* Pro Overlay */}
-                                    {!hasFullAccess && userPlan !== 'free' && (
+                                    {!hasFullAccess && (
                                         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center">
                                             <div className="bg-black/40 backdrop-blur-md border border-gold/30 p-8 rounded-sm max-w-sm w-full shadow-2xl">
                                                 <p className="text-gold text-[10px] tracking-[0.3em] uppercase mb-4">PREMIUM INSIGHT</p>
