@@ -1868,7 +1868,8 @@
 
 
         const TheBriefing = ({ onNavigate, userProfile, userGoals, onProgressUpdate, userPlan, onUpgrade, understoodCards, setUnderstoodCards, unclearCards, setUnclearCards, purchasedBundles, onPurchaseBundle, freeLimit, nextReplenishTime, onUpdateLimits, dailyCompleted, onUpdateDailyCompleted }) => {
-            const [viewMode, setViewMode] = useState('swipe'); // 'swipe', 'roadmap', or 'subscription'
+            const [viewMode, setViewMode] = useState('swipe'); // 'swipe', 'roadmap', 'subscription', 'roadmap-purchase'
+            const [purchaseTargetRoadmap, setPurchaseTargetRoadmap] = useState(null);
             const [currentCardIndex, setCurrentCardIndex] = useState(0);
             // understoodCards and unclearCards now come from props (App level) for persistence
             // dailyCompleted now comes from props (App level) for persistence and daily reset
@@ -2329,6 +2330,111 @@
 
             const levelLabels = { 1: '★', 2: '★★', 3: '★★★' };
 
+            // Roadmap Purchase Paywall (individual roadmap ¥600)
+            if (viewMode === 'roadmap-purchase' && purchaseTargetRoadmap) {
+                const targetRoadmap = assetRoadmaps[purchaseTargetRoadmap];
+                const targetCardCount = targetRoadmap ? targetRoadmap.reduce((sum, step) => sum + step.cards.length, 0) : 0;
+                return (
+                    <div className="min-h-screen bg-obsidian pt-24 pb-20 px-6 sm:px-8 relative overflow-hidden">
+                        {/* Dynamic Background */}
+                        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+                            <div className="absolute top-[5%] left-1/4 w-[600px] h-[600px] bg-gold/10 rounded-full blur-[150px] opacity-40" />
+                            <div className="absolute bottom-[10%] right-1/4 w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-[120px] opacity-30" />
+                        </div>
+
+                        <div className="max-w-xl mx-auto relative z-10">
+                            {/* Header */}
+                            <div className="mb-10 text-center">
+                                <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
+                                    <p className="text-dim text-xs tracking-[0.4em] mb-4 text-gold">UNLOCK ROADMAP</p>
+                                    <h2 className="text-3xl md:text-4xl font-black tracking-tighter text-platinum mb-3">
+                                        「<span className="text-gold-gradient">{purchaseTargetRoadmap}</span>」を<br />学習する
+                                    </h2>
+                                    <p className="text-dim text-sm">このロードマップの全カードにアクセス</p>
+                                </motion.div>
+                            </div>
+
+                            {/* ★ Target Roadmap Purchase — Primary CTA */}
+                            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+                                className="mb-6">
+                                <div className="bg-gradient-to-br from-gold/20 to-amber-500/10 border-2 border-gold rounded-sm p-6 relative overflow-hidden">
+                                    <div className="absolute top-4 right-4 text-[10px] bg-gold text-black px-3 py-1 rounded-sm font-bold">おすすめ</div>
+                                    <h3 className="text-xl font-black text-platinum mb-1">{purchaseTargetRoadmap} ロードマップ</h3>
+                                    <p className="text-xs text-dim mb-3">{targetCardCount}枚のカードで体系的に学ぶ</p>
+                                    <div className="flex items-end gap-2 mb-4">
+                                        <span className="text-4xl font-black text-gold">¥600</span>
+                                        <span className="text-dim text-sm mb-1">/ 買い切り</span>
+                                    </div>
+
+                                    <button onClick={() => { onPurchaseBundle(purchaseTargetRoadmap); setSelectedRoadmap(purchaseTargetRoadmap); setViewMode('roadmap'); setPurchaseTargetRoadmap(null); }}
+                                        className="w-full py-4 bg-gold text-black font-bold text-lg rounded-sm hover:bg-amber-400 transition-colors shadow-lg shadow-gold/20">
+                                        ¥600で購入する
+                                    </button>
+                                </div>
+                            </motion.div>
+
+                            {/* Divider */}
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
+                                className="flex items-center gap-4 mb-6">
+                                <div className="flex-1 h-px bg-white/10" />
+                                <p className="text-xs text-dim whitespace-nowrap">もっとお得なプラン</p>
+                                <div className="flex-1 h-px bg-white/10" />
+                            </motion.div>
+
+                            {/* Other Plans */}
+                            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+                                className="space-y-4 mb-8">
+
+                                {/* Annual Plan */}
+                                <div className="bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/20 rounded-sm p-6 relative overflow-hidden group hover:border-gold/40 transition-all duration-300">
+                                    <div className="absolute top-4 right-4 text-[10px] bg-emerald-500/80 text-white px-3 py-1 rounded-sm font-bold">人気No.1</div>
+                                    <h3 className="text-lg font-bold text-platinum mb-1">年間パス</h3>
+                                    <p className="text-xs text-dim mb-3">全ロードマップ + 高度な戦略を解放</p>
+                                    <div className="flex items-end gap-2 mb-1">
+                                        <span className="text-3xl font-bold text-platinum">¥3,200</span>
+                                        <span className="text-dim text-sm mb-1">/ 年</span>
+                                    </div>
+                                    <p className="text-xs text-emerald-400 mb-4">月あたり <span className="font-bold">¥267</span> — 全{Object.keys(assetRoadmaps).length}ロードマップ含む</p>
+                                    <ul className="space-y-2 mb-5">
+                                        <li className="flex items-center gap-3 text-sm text-platinum/70"><span className="text-gold">✓</span>全{allCards.length}枚の学習カード</li>
+                                        <li className="flex items-center gap-3 text-sm text-platinum/70"><span className="text-gold">✓</span>全ロードマップ解放（バンドル除く）</li>
+                                        <li className="flex items-center gap-3 text-sm text-platinum/70"><span className="text-gold">✓</span>高度な戦略・FX・仮想通貨等を学べる</li>
+                                    </ul>
+                                    <button onClick={() => { onUpgrade('annual'); setViewMode('swipe'); setPurchaseTargetRoadmap(null); }}
+                                        className="w-full py-3 border border-gold/50 text-gold font-bold rounded-sm hover:bg-gold/10 transition-colors">
+                                        年間パスを始める
+                                    </button>
+                                </div>
+
+                                {/* Lifetime Plan */}
+                                <div className="bg-ash/30 border border-white/10 rounded-sm p-5 relative overflow-hidden">
+                                    <div className="absolute top-4 right-4 text-[10px] bg-white/10 text-platinum px-3 py-1 rounded-sm font-bold">BEST VALUE</div>
+                                    <h3 className="text-lg font-bold text-platinum mb-1">ライフタイム</h3>
+                                    <p className="text-xs text-dim mb-2">全機能 + 全バンドル永久解放</p>
+                                    <div className="flex items-end gap-2 mb-4">
+                                        <span className="text-2xl font-bold text-platinum">¥6,700</span>
+                                        <span className="text-dim text-sm mb-1">/ 買い切り</span>
+                                    </div>
+                                    <button onClick={() => { onUpgrade('lifetime'); setViewMode('swipe'); setPurchaseTargetRoadmap(null); }}
+                                        className="w-full py-3 bg-white/5 border border-white/20 text-platinum text-sm font-bold rounded-sm hover:bg-white/10 transition-colors">
+                                        永久アクセスを手に入れる
+                                    </button>
+                                </div>
+                            </motion.div>
+
+                            {/* Back Button */}
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+                                className="text-center">
+                                <button onClick={() => { setViewMode('roadmap'); setPurchaseTargetRoadmap(null); }}
+                                    className="text-sm text-dim hover:text-platinum transition-colors underline underline-offset-4">
+                                    ← ロードマップに戻る
+                                </button>
+                            </motion.div>
+                        </div>
+                    </div>
+                );
+            }
+
             // Subscription Paywall
             if (viewMode === 'subscription' || shouldShowPaywall) {
                 return (
@@ -2646,11 +2752,9 @@
                                                     // Pro roadmaps → subscription page
                                                     setViewMode('subscription');
                                                 } else if (isNonProUnpurchased) {
-                                                    // Non-Pro, free, not purchased → purchase confirmation
-                                                    if (confirm(`「${assetName}」ロードマップを¥600で購入しますか？`)) {
-                                                        onPurchaseBundle(assetName);
-                                                        setSelectedRoadmap(assetName);
-                                                    }
+                                                    // Non-Pro, free, not purchased → roadmap purchase paywall
+                                                    setPurchaseTargetRoadmap(assetName);
+                                                    setViewMode('roadmap-purchase');
                                                 } else {
                                                     setSelectedRoadmap(assetName);
                                                 }
