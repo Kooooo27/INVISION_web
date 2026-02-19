@@ -60,7 +60,7 @@ const AssetDetailModal = ({ asset, onClose }) => {
 
                     {asset.brokers && (
                         <div className="bg-gradient-to-br from-gold/10 to-amber-500/5 border border-gold/30 rounded-sm p-5">
-                            <p className="text-xs text-gold uppercase tracking-wider mb-4 font-bold flex items-center gap-2">🏦 参考口座</p>
+                            <p className="text-xs text-gold uppercase tracking-wider mb-4 font-bold flex items-center gap-2">REFERENCE BROKER</p>
                             <div className="space-y-3">
                                 {asset.brokers.map((broker, i) => (
                                     <a key={i} href={broker.url} target="_blank" rel="noopener noreferrer"

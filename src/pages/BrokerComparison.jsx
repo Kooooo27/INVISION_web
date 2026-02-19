@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAppContext } from '../contexts/AppContext';
 
 
-const BrokerComparison = ({ onNavigate }) => {
+const BrokerComparison = () => {
+    const { onNavigate } = useAppContext();
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [selectedBroker, setSelectedBroker] = useState(null);
     const [tipsOpen, setTipsOpen] = useState(false);
@@ -12,7 +14,7 @@ const BrokerComparison = ({ onNavigate }) => {
             id: 'sbi',
             name: 'SBI証券',
             category: 'general',
-            logo: '🏦',
+            logo: 'SBI',
             tagline: '幅広い商品ラインナップ',
             ratings: { fees: 5, products: 5, ease: 3, support: 3, tools: 4 },
             features: ['国内株取引手数料0円プランあり', 'NISA・iDeCo対応', '米国株・投資信託充実', 'Tポイント/Vポイント連携'],
@@ -54,7 +56,7 @@ const BrokerComparison = ({ onNavigate }) => {
             id: 'monex',
             name: 'マネックス証券',
             category: 'general',
-            logo: '📊',
+            logo: 'WN',
             tagline: '米国株・分析ツールに強み',
             ratings: { fees: 3, products: 5, ease: 3, support: 3, tools: 5 },
             features: ['米国株取扱い銘柄数が多い', '銘柄スカウター無料', 'dポイント連携', 'ワン株で1株投資'],
@@ -68,7 +70,7 @@ const BrokerComparison = ({ onNavigate }) => {
             id: 'au',
             name: 'auカブコム証券',
             category: 'general',
-            logo: '📱',
+            logo: 'RA',
             tagline: 'auユーザー向け特典充実',
             ratings: { fees: 4, products: 4, ease: 4, support: 3, tools: 3 },
             features: ['Pontaポイント投資', 'au PAYカード積立', 'プチ株で1株投資', 'NISA手数料無料'],
@@ -82,7 +84,7 @@ const BrokerComparison = ({ onNavigate }) => {
             id: 'paypay',
             name: 'PayPay証券',
             category: 'mobile',
-            logo: '📱',
+            logo: 'BF',
             tagline: 'スマホで1000円から投資',
             ratings: { fees: 3, products: 3, ease: 5, support: 3, tools: 3 },
             features: ['1000円から株購入', 'PayPayボーナス運用', '米国株も金額指定', 'マンガで学ぶ投資'],
@@ -295,7 +297,7 @@ const BrokerComparison = ({ onNavigate }) => {
                         <div className="flex items-center justify-between mb-2">
                             <p className="text-dim text-xs tracking-[0.4em] text-gold uppercase">Broker Comparison</p>
                             <button onClick={() => setTipsOpen(!tipsOpen)} className="text-gold hover:scale-110 transition-transform text-lg" title="用語解説">
-                                ❕
+                                ?
                             </button>
                         </div>
                         <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-platinum mb-4">証券会社を<span className="text-gold-gradient">比較</span>する</h2>
@@ -311,7 +313,7 @@ const BrokerComparison = ({ onNavigate }) => {
                     {tipsOpen && (
                         <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden mb-10">
                             <div className="bg-gold/5 border border-gold/20 rounded-sm p-6">
-                                <h3 className="text-gold font-bold mb-4 flex items-center gap-2"><span>💡</span> 証券・証券会社って何？</h3>
+                                <h3 className="text-gold font-bold mb-4 flex items-center gap-2"><span>GUIDE</span> 証券・証券会社って何？</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
                                     <div>
                                         <h4 className="text-platinum font-bold mb-2">証券とは？</h4>

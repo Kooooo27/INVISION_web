@@ -25,6 +25,8 @@ if (firebaseConfig.apiKey) {
     try {
         firebase.initializeApp(firebaseConfig);
         auth = firebase.auth();
+        // Keep user logged in across browser restarts
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
         db = firebase.firestore();
         firebase.analytics(); // Initialize Analytics
         isFirebaseReady = true;

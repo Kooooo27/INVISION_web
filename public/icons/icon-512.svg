@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="76" fill="#0a0a0a"/>
+  <rect x="30" y="30" width="452" height="452" rx="60" fill="none" stroke="#C9A227" stroke-width="8"/>
+  <text x="256" y="230" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-weight="900" font-size="194" fill="#C9A227">IN</text>
+  <text x="256" y="350" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-weight="300" font-size="56" fill="#E8E4D9">VISION</text>
+</svg>

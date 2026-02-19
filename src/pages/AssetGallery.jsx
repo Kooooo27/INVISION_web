@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { assetDetailData } from '../data/assetDetailData';
 import AssetDetailModal from '../components/AssetDetailModal';
+import { useAppContext } from '../contexts/AppContext';
 
 
 // ============================================
@@ -43,7 +45,9 @@ const LuxuryCard = ({ asset, index, onSelect }) => {
     );
 };
 
-const AssetGallery = ({ onNavigate, preSelectedAssetId, onClearPreSelection }) => {
+const AssetGallery = () => {
+    const { pageParams, onClearPreSelection, onNavigate } = useAppContext();
+    const preSelectedAssetId = pageParams;
     const [selectedAsset, setSelectedAsset] = useState(null);
 
     useEffect(() => {
@@ -72,23 +76,31 @@ const AssetGallery = ({ onNavigate, preSelectedAssetId, onClearPreSelection }) =
                 </div>
             </div>
 
-            {/* Footer Disclaimer */}
-            <footer className="w-full py-16 px-8 border-t border-white/5 bg-obsidian text-center mt-20 relative z-10">
-                <div className="max-w-4xl mx-auto space-y-6">
-                    <h3 className="text-gold text-lg font-bold tracking-widest uppercase mb-4">INVISION</h3>
-                    <p className="text-xs text-dim leading-loose">
-                        INVISIONは、投資を始める前に「自分を知る」ためのプラットフォームです。<br />
-                        このサイトは学習・自己分析を目的としており、特定の商品の購入を勧めるものではありません。<br />
-                        診断やシミュレーションの結果はあくまで参考情報であり、将来の成果を約束するものではありません。<br />
-                        投資の最終判断はご自身の責任となります。元本が減るリスクがあることをご理解ください。
+            {/* Footer — Luxury Brand Treatment */}
+            <footer className="w-full pt-20 pb-12 px-8 bg-obsidian text-center mt-20 relative z-10">
+                <div className="max-w-3xl mx-auto">
+                    {/* Gold line separator */}
+                    <div className="w-12 h-px bg-gold/40 mx-auto mb-12" />
+
+                    {/* Brand mark */}
+                    <p className="text-xs tracking-[0.5em] text-gold/60 uppercase mb-10">INVISION</p>
+
+                    {/* Disclaimer — refined */}
+                    <p className="text-[11px] text-dim/60 leading-[2] max-w-lg mx-auto mb-10">
+                        本サービスは学習・自己分析を目的としており、投資勧誘を意図するものではありません。
+                        診断・シミュレーション結果は参考情報であり、将来の成果を保証するものではありません。
+                        投資判断はご自身の責任において行ってください。
                     </p>
-                    <div className="flex justify-center gap-6 mt-4">
-                        <button onClick={() => onNavigate('tokushoho')} className="text-[10px] text-dim hover:text-gold transition-colors underline">特定商取引法に基づく表記</button>
-                        <button onClick={() => onNavigate('privacy')} className="text-[10px] text-dim hover:text-gold transition-colors underline">プライバシーポリシー</button>
+
+                    {/* Legal links */}
+                    <div className="flex justify-center gap-8 mb-10">
+                        <button onClick={() => onNavigate('tokushoho')} className="text-[10px] text-dim/40 hover:text-gold/60 transition-colors tracking-wider uppercase">特定商取引法</button>
+                        <span className="text-dim/20">|</span>
+                        <button onClick={() => onNavigate('privacy')} className="text-[10px] text-dim/40 hover:text-gold/60 transition-colors tracking-wider uppercase">Privacy</button>
                     </div>
-                    <p className="text-[10px] text-white/20 mt-8">
-                        © 2025 INVISION. All Rights Reserved.
-                    </p>
+
+                    {/* Copyright */}
+                    <p className="text-[9px] text-white/10 tracking-widest">© 2025 INVISION</p>
                 </div>
             </footer>
 

@@ -15,6 +15,10 @@ export default {
                 gold: '#C9A227',
                 platinum: '#E8E8E8',
                 dim: '#666666',
+                // Muted luxury tones
+                sage: '#6B8A7A',
+                camel: '#B8A070',
+                clay: '#A67070',
             },
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],

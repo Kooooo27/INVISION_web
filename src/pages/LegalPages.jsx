@@ -1,8 +1,10 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAppContext } from '../contexts/AppContext';
 
 
-const Tokushoho = ({ onNavigate }) => {
+const Tokushoho = () => {
+    const { onNavigate } = useAppContext();
     const tableRows = [
         { label: "販売事業者", value: "田中 滉一郎" },
         { label: "所在地 / 連絡先", value: "消費者庁の規定に基づき、請求があった場合には遅滞なく開示いたします。\nご希望の方は下記メールアドレスまでご連絡ください。\nsupport@invision-app.com" },
@@ -58,7 +60,8 @@ const Tokushoho = ({ onNavigate }) => {
     );
 };
 
-const PrivacyPolicy = ({ onNavigate }) => {
+const PrivacyPolicy = () => {
+    const { onNavigate } = useAppContext();
     const sections = [
         { title: '1. 収集する情報', content: '当サービスでは、以下の情報を取得する場合があります。\n\n• アカウント情報：Googleアカウントによるログイン時のメールアドレス・表示名\n• 学習データ：学習進捗、理解度、苦手カード情報\n• 診断結果：投資タイプ診断の回答・結果\n• 決済情報：Stripeを通じた決済処理（クレジットカード情報は当社では保持しません）\n• 端末情報：ブラウザ種別、画面サイズ等（サービス改善のため）' },
         { title: '2. 利用目的', content: '取得した情報は、以下の目的で利用します。\n\n• サービスの提供・運営\n• 学習進捗の管理・可視化\n• 有料プランの提供・決済処理\n• サービスの改善・新機能開発\n• お問い合わせ対応' },

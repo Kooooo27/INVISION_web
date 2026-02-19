@@ -4,9 +4,14 @@ import { assetDetailData } from '../data/assetDetailData';
 import { profiles } from '../data/profiles';
 import { getUserTitle } from '../utils/helpers';
 import AssetDetailModal from '../components/AssetDetailModal';
+import ShareResultImage from '../components/ShareResultImage';
+import { useAppContext } from '../contexts/AppContext';
 
 
-const PortfolioCalibration = ({ onComplete, existingProfile, onRediagnose, isOnboarding, onSkip, onNavigate, onSelectAsset }) => {
+const PortfolioCalibration = () => {
+    const { finishCalibration: onComplete, userProfile: existingProfile, onSetProfile: onRediagnose, onboardingStep, handleSkip: onSkip, onNavigate } = useAppContext();
+    const isOnboarding = onboardingStep < 3;
+    const onSelectAsset = (assetId) => { onNavigate('gallery', assetId); };
     const [currentQ, setCurrentQ] = useState(0);
     const [viewingAsset, setViewingAsset] = useState(null);
     const [answers, setAnswers] = useState({});
@@ -222,7 +227,7 @@ const PortfolioCalibration = ({ onComplete, existingProfile, onRediagnose, isOnb
 
                     {/* Knowledge Level Badge */}
                     <div className="flex items-center gap-3 mb-6">
-                        <span className={`text-sm font-bold ${levelColors[expLevel]}`}>📚 知識レベル: {levelNames[expLevel]}</span>
+                        <span className={`text-sm font-bold ${levelColors[expLevel]}`}>LEVEL: {levelNames[expLevel]}</span>
                         <div className="flex gap-1">
                             {[1, 2, 3].map(l => (
                                 <div key={l} className={`w-3 h-3 rounded-full ${l <= expLevel ? 'bg-gold' : 'bg-stone'}`} />
@@ -248,12 +253,12 @@ const PortfolioCalibration = ({ onComplete, existingProfile, onRediagnose, isOnb
                     {/* Strengths & Watch Out */}
                     <div className="grid md:grid-cols-2 gap-4 mb-8">
                         {existingProfile.strengths && (
-                            <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-sm p-5">
-                                <p className="text-xs text-emerald-400 uppercase tracking-wider mb-3 font-bold">💪 強み</p>
+                            <div className="bg-sage/10 border border-sage/20 rounded-sm p-5">
+                                <p className="text-xs text-sage uppercase tracking-wider mb-3 font-bold">STRENGTHS</p>
                                 <ul className="space-y-2">
                                     {existingProfile.strengths.map((s, i) => (
                                         <li key={i} className="text-sm text-platinum/80 flex items-start gap-2">
-                                            <span className="text-emerald-400 mt-0.5">✓</span>
+                                            <span className="text-sage mt-0.5">✓</span>
                                             <span>{s}</span>
                                         </li>
                                     ))}
@@ -261,12 +266,12 @@ const PortfolioCalibration = ({ onComplete, existingProfile, onRediagnose, isOnb
                             </div>
                         )}
                         {existingProfile.watchOut && (
-                            <div className="bg-amber-500/10 border border-amber-500/20 rounded-sm p-5">
-                                <p className="text-xs text-amber-400 uppercase tracking-wider mb-3 font-bold">⚠️ 注意点</p>
+                            <div className="bg-camel/10 border border-camel/20 rounded-sm p-5">
+                                <p className="text-xs text-camel uppercase tracking-wider mb-3 font-bold">WATCH OUT</p>
                                 <ul className="space-y-2">
                                     {existingProfile.watchOut.map((w, i) => (
                                         <li key={i} className="text-sm text-platinum/80 flex items-start gap-2">
-                                            <span className="text-amber-400 mt-0.5">!</span>
+                                            <span className="text-camel mt-0.5">!</span>
                                             <span>{w}</span>
                                         </li>
                                     ))}
@@ -278,7 +283,7 @@ const PortfolioCalibration = ({ onComplete, existingProfile, onRediagnose, isOnb
                     {/* Level-based Advice */}
                     {existingProfile.levelAdvice && existingProfile.levelAdvice[expLevel] && (
                         <div className="bg-gradient-to-r from-gold/10 to-amber-500/5 border border-gold/20 rounded-sm p-5 mb-8">
-                            <p className="text-xs text-gold uppercase tracking-wider mb-2 font-bold">💡 {levelNames[expLevel]}のあなたへのアドバイス</p>
+                            <p className="text-xs text-gold uppercase tracking-wider mb-2 font-bold">ADVICE {levelNames[expLevel]}のあなたへ</p>
                             <p className="text-sm text-platinum/90 leading-relaxed">{existingProfile.levelAdvice[expLevel]}</p>
                         </div>
                     )}
@@ -287,14 +292,14 @@ const PortfolioCalibration = ({ onComplete, existingProfile, onRediagnose, isOnb
                     <div className="bg-ash/50 border border-white/5 rounded-sm p-6 mb-8">
                         <p className="text-xs text-dim uppercase tracking-wider mb-4">アロケーション例</p>
                         <div className="flex h-3 rounded-full overflow-hidden mb-4">
-                            <div className="bg-emerald-500" style={{ width: `${existingProfile.allocation.safe}%` }} />
-                            <div className="bg-amber-500" style={{ width: `${existingProfile.allocation.balanced}%` }} />
-                            <div className="bg-rose-500" style={{ width: `${existingProfile.allocation.growth}%` }} />
+                            <div className="bg-sage" style={{ width: `${existingProfile.allocation.safe}%` }} />
+                            <div className="bg-camel" style={{ width: `${existingProfile.allocation.balanced}%` }} />
+                            <div className="bg-clay" style={{ width: `${existingProfile.allocation.growth}%` }} />
                         </div>
                         <div className="flex justify-between text-xs text-dim">
-                            <span>🛡️ 安全 {existingProfile.allocation.safe}%</span>
-                            <span>⚖️ バランス {existingProfile.allocation.balanced}%</span>
-                            <span>🚀 成長 {existingProfile.allocation.growth}%</span>
+                            <span><span className="inline-block w-2 h-2 rounded-full bg-sage mr-1"></span>安全 {existingProfile.allocation.safe}%</span>
+                            <span><span className="inline-block w-2 h-2 rounded-full bg-camel mr-1"></span>バランス {existingProfile.allocation.balanced}%</span>
+                            <span><span className="inline-block w-2 h-2 rounded-full bg-clay mr-1"></span>成長 {existingProfile.allocation.growth}%</span>
                         </div>
                     </div>
 
@@ -332,9 +337,13 @@ const PortfolioCalibration = ({ onComplete, existingProfile, onRediagnose, isOnb
                         </div>
                     </div>
 
-                    <button onClick={startRediagnose} className="btn-sharp px-8 py-4 rounded-sm border-dim text-dim w-full text-lg font-bold hover:border-gold hover:text-gold transition-all">
-                        再診断
-                    </button>
+                    <ShareResultImage profile={existingProfile} />
+
+                    <div className="mt-4">
+                        <button onClick={startRediagnose} className="btn-sharp px-8 py-4 rounded-sm border-dim text-dim w-full text-lg font-bold hover:border-gold hover:text-gold transition-all">
+                            再診断
+                        </button>
+                    </div>
                 </motion.div>
                 <AnimatePresence>
                     {viewingAsset && <AssetDetailModal asset={viewingAsset} onClose={() => setViewingAsset(null)} />}
@@ -390,14 +399,14 @@ const PortfolioCalibration = ({ onComplete, existingProfile, onRediagnose, isOnb
                     <div className="bg-ash/50 border border-white/5 rounded-sm p-6 mb-8">
                         <p className="text-xs text-dim uppercase tracking-wider mb-4">アロケーション例</p>
                         <div className="flex h-3 rounded-full overflow-hidden mb-4">
-                            <div className="bg-emerald-500" style={{ width: `${profile.allocation.safe}%` }} />
-                            <div className="bg-amber-500" style={{ width: `${profile.allocation.balanced}%` }} />
-                            <div className="bg-rose-500" style={{ width: `${profile.allocation.growth}%` }} />
+                            <div className="bg-sage" style={{ width: `${profile.allocation.safe}%` }} />
+                            <div className="bg-camel" style={{ width: `${profile.allocation.balanced}%` }} />
+                            <div className="bg-clay" style={{ width: `${profile.allocation.growth}%` }} />
                         </div>
                         <div className="flex justify-between text-xs text-dim">
-                            <span>🛡️ 安全 {profile.allocation.safe}%</span>
-                            <span>⚖️ バランス {profile.allocation.balanced}%</span>
-                            <span>🚀 成長 {profile.allocation.growth}%</span>
+                            <span><span className="inline-block w-2 h-2 rounded-full bg-sage mr-1"></span>安全 {profile.allocation.safe}%</span>
+                            <span><span className="inline-block w-2 h-2 rounded-full bg-camel mr-1"></span>バランス {profile.allocation.balanced}%</span>
+                            <span><span className="inline-block w-2 h-2 rounded-full bg-clay mr-1"></span>成長 {profile.allocation.growth}%</span>
                         </div>
                     </div>
                     <div className="mb-8">
@@ -435,7 +444,7 @@ const PortfolioCalibration = ({ onComplete, existingProfile, onRediagnose, isOnb
 
                     {/* Recommended Brokers Section */}
                     <div className="bg-gradient-to-br from-gold/10 to-amber-500/5 border border-gold/30 rounded-sm p-6 mb-8">
-                        <p className="text-xs text-gold uppercase tracking-wider mb-4 font-bold">🏦 まずはここで口座開設</p>
+                        <p className="text-xs text-gold uppercase tracking-wider mb-4 font-bold">RECOMMENDED BROKER</p>
                         <p className="text-sm text-platinum/70 mb-4">投資を始めるには証券口座が必要です。ご自身で選んで開設しましょう。</p>
                         <div className="space-y-3">
                             {recommendedBrokers.map((broker, i) => (
@@ -453,7 +462,9 @@ const PortfolioCalibration = ({ onComplete, existingProfile, onRediagnose, isOnb
                         <p className="text-[10px] text-dim">※ 本情報は投資勧誘を目的としたものではありません。最終的な投資判断はご自身でお願いします。</p>
                     </div>
 
-                    <div className="flex gap-4">
+                    <ShareResultImage profile={profile} />
+
+                    <div className="flex gap-4 mt-4">
                         <button onClick={startRediagnose} className="btn-sharp px-6 py-4 rounded-sm border-dim text-dim flex-1 font-bold hover:border-gold hover:text-gold transition-all">
                             やり直す
                         </button>

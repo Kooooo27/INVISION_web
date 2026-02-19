@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { assetDetailData } from '../data/assetDetailData';
+import { useAppContext } from '../contexts/AppContext';
 
 
-const PortfolioCreator = ({ userProfile, onNavigate, userPlan, onUpgrade, portfolioSettings, onSave }) => {
+const PortfolioCreator = () => {
+    const { userProfile, onNavigate, userPlan, onUpgrade, portfolioSettings, onUpdatePortfolioSettings: onSave } = useAppContext();
     const hasFullAccess = userPlan === 'annual' || userPlan === 'lifetime';
     const [principal, setPrincipal] = useState(portfolioSettings?.principal || 1000000);
     const [monthly, setMonthly] = useState(portfolioSettings?.monthly || 30000);
@@ -151,34 +153,34 @@ const PortfolioCreator = ({ userProfile, onNavigate, userPlan, onUpgrade, portfo
 
                             {/* Safe */}
                             <div className="group">
-                                <div className="flex justify-between mb-3 border-l-2 border-emerald-500 pl-3 transition-all group-hover:border-l-4">
+                                <div className="flex justify-between mb-3 border-l-2 border-sage pl-3 transition-all group-hover:border-l-4">
                                     <span className="text-platinum font-bold text-lg">守り</span>
-                                    <span className="text-emerald-400 font-mono text-xl">{allocation.safe}%</span>
+                                    <span className="text-sage font-mono text-xl">{allocation.safe}%</span>
                                 </div>
                                 <input type="range" min="0" max="100" value={allocation.safe} onChange={(e) => updateAllocation('safe', Number(e.target.value))}
-                                    className="w-full h-1 bg-stone/50 rounded-lg appearance-none cursor-pointer accent-emerald-500 hover:h-2 transition-all" />
+                                    className="w-full h-1 bg-stone/50 rounded-lg appearance-none cursor-pointer accent-sage hover:h-2 transition-all" />
                                 <p className="text-xs text-dim mt-2 pl-3">国債・現金など。低リスクで着実な運用。</p>
                             </div>
 
                             {/* Balanced */}
                             <div className="group">
-                                <div className="flex justify-between mb-3 border-l-2 border-amber-500 pl-3 transition-all group-hover:border-l-4">
+                                <div className="flex justify-between mb-3 border-l-2 border-camel pl-3 transition-all group-hover:border-l-4">
                                     <span className="text-platinum font-bold text-lg">バランス</span>
-                                    <span className="text-amber-500 font-mono text-xl">{allocation.balanced}%</span>
+                                    <span className="text-camel font-mono text-xl">{allocation.balanced}%</span>
                                 </div>
                                 <input type="range" min="0" max="100" value={allocation.balanced} onChange={(e) => updateAllocation('balanced', Number(e.target.value))}
-                                    className="w-full h-1 bg-stone/50 rounded-lg appearance-none cursor-pointer accent-amber-500 hover:h-2 transition-all" />
+                                    className="w-full h-1 bg-stone/50 rounded-lg appearance-none cursor-pointer accent-camel hover:h-2 transition-all" />
                                 <p className="text-xs text-dim mt-2 pl-3">投資信託・REITなど。成長と安定のバランス。</p>
                             </div>
 
                             {/* Growth */}
                             <div className="group">
-                                <div className="flex justify-between mb-3 border-l-2 border-rose-500 pl-3 transition-all group-hover:border-l-4">
+                                <div className="flex justify-between mb-3 border-l-2 border-clay pl-3 transition-all group-hover:border-l-4">
                                     <span className="text-platinum font-bold text-lg">攻め</span>
-                                    <span className="text-rose-500 font-mono text-xl">{allocation.growth}%</span>
+                                    <span className="text-clay font-mono text-xl">{allocation.growth}%</span>
                                 </div>
                                 <input type="range" min="0" max="100" value={allocation.growth} onChange={(e) => updateAllocation('growth', Number(e.target.value))}
-                                    className="w-full h-1 bg-stone/50 rounded-lg appearance-none cursor-pointer accent-rose-500 hover:h-2 transition-all" />
+                                    className="w-full h-1 bg-stone/50 rounded-lg appearance-none cursor-pointer accent-clay hover:h-2 transition-all" />
                                 <p className="text-xs text-dim mt-2 pl-3">株式・仮想通貨など。高いリターンを狙う。</p>
                             </div>
                         </div>
@@ -191,9 +193,9 @@ const PortfolioCreator = ({ userProfile, onNavigate, userPlan, onUpgrade, portfo
                             <div className="relative w-64 h-64 rounded-full custom-shadow"
                                 style={{
                                     background: `conic-gradient(
-                                        #10b981 0% ${allocation.safe}%, 
-                                        #f59e0b ${allocation.safe}% ${allocation.safe + allocation.balanced}%, 
-                                        #f43f5e ${allocation.safe + allocation.balanced}% 100%
+                                        #6B8A7A 0% ${allocation.safe}%, 
+                                        #B8A070 ${allocation.safe}% ${allocation.safe + allocation.balanced}%, 
+                                        #A67070 ${allocation.safe + allocation.balanced}% 100%
                                     )`
                                 }}>
                                 <div className="absolute inset-4 bg-ash rounded-full flex flex-col items-center justify-center">
@@ -204,9 +206,9 @@ const PortfolioCreator = ({ userProfile, onNavigate, userPlan, onUpgrade, portfo
 
                             {/* Legend */}
                             <div className="flex gap-8 mt-8">
-                                <div className="flex items-center gap-2"><div className="w-3 h-3 bg-emerald-500 rounded-full" /><span className="text-sm text-platinum">守り</span></div>
-                                <div className="flex items-center gap-2"><div className="w-3 h-3 bg-amber-500 rounded-full" /><span className="text-sm text-platinum">バランス</span></div>
-                                <div className="flex items-center gap-2"><div className="w-3 h-3 bg-rose-500 rounded-full" /><span className="text-sm text-platinum">攻め</span></div>
+                                <div className="flex items-center gap-2"><div className="w-3 h-3 bg-sage rounded-full" /><span className="text-sm text-platinum">守り</span></div>
+                                <div className="flex items-center gap-2"><div className="w-3 h-3 bg-camel rounded-full" /><span className="text-sm text-platinum">バランス</span></div>
+                                <div className="flex items-center gap-2"><div className="w-3 h-3 bg-clay rounded-full" /><span className="text-sm text-platinum">攻め</span></div>
                             </div>
                         </div>
 
@@ -264,7 +266,7 @@ const PortfolioCreator = ({ userProfile, onNavigate, userPlan, onUpgrade, portfo
                         {/* Recommended Brokers based on Allocation */}
                         <div className="mt-8 pt-8 border-t border-white/10">
                             <h3 className="text-sm font-bold text-platinum mb-4 flex items-center gap-2">
-                                <span>🏦</span> このポートフォリオへの参考口座
+                                <span>REFERENCE BROKER</span>
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {(() => {
