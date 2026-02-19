@@ -23,9 +23,9 @@ if (SENTRY_DSN) {
             'Network request failed',
         ],
     });
-    console.log('✅ Sentry initialized');
+    // console.log('✅ Sentry initialized');
 } else {
-    console.log('⚠️ Sentry DSN not configured. Error monitoring disabled.');
+    // console.log('⚠️ Sentry DSN not configured. Error monitoring disabled.');
 }
 
 export { Sentry };

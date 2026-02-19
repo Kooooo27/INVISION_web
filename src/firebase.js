@@ -4,6 +4,7 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
+import 'firebase/compat/analytics';
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -25,14 +26,14 @@ if (firebaseConfig.apiKey) {
         firebase.initializeApp(firebaseConfig);
         auth = firebase.auth();
         db = firebase.firestore();
+        firebase.analytics(); // Initialize Analytics
         isFirebaseReady = true;
-        console.log("✅ Firebase initialized!");
+        // console.log("✅ Firebase initialized!");
     } catch (e) {
         console.error("Firebase init failed:", e);
     }
 } else {
-    console.warn("⚠️ No Firebase config found. VITE_FIREBASE_API_KEY is missing/empty.");
-    console.log("Config dump (keys only):", Object.keys(firebaseConfig));
+    // console.log("⚠️ No Firebase config found. Running in Demo Mode.");
 }
 
 export { auth, db, isFirebaseReady, firebase };

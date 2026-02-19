@@ -2,13 +2,7 @@ import React from 'react';
 import { isFirebaseReady } from '../firebase';
 
 const LoginButton = ({ user, onLogin, onLogout }) => {
-    if (!isFirebaseReady) {
-        return (
-            <button className="px-3 py-1.5 rounded-full text-xs font-bold border flex-shrink-0 bg-red-500/10 border-red-500/30 text-red-500 cursor-not-allowed">
-                設定未完了
-            </button>
-        );
-    }
+    if (!isFirebaseReady) return null;
 
     return (
         <button

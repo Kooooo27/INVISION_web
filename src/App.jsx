@@ -228,8 +228,15 @@ const App = () => {
     }, [firebaseUser]);
 
     // 3. User Data Sync (Profile, Progress, Settings)
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
+
     useEffect(() => {
-        if (!isFirebaseReady || !firebaseUser) return;
+        if (!isFirebaseReady || !firebaseUser) {
+            setIsDataLoaded(false);
+            return;
+        }
+
+        setIsDataLoaded(false);
 
         db.collection('users').doc(firebaseUser.uid).get()
             .then(doc => {
@@ -286,13 +293,14 @@ const App = () => {
                     }
                 }
             })
-            .catch(err => console.error("Error syncing user data:", err));
+            .catch(err => console.error("Error syncing user data:", err))
+            .finally(() => setIsDataLoaded(true));
 
     }, [firebaseUser]);
 
     // 4. Auto-save User Data
     useEffect(() => {
-        if (!isFirebaseReady || !firebaseUser) return;
+        if (!isFirebaseReady || !firebaseUser || !isDataLoaded) return;
 
         const saveData = setTimeout(() => {
             const dataToSave = {
@@ -319,6 +327,7 @@ const App = () => {
         return () => clearTimeout(saveData);
     }, [
         firebaseUser,
+        isDataLoaded,
         state.userProfile,
         state.userGoals,
         state.understoodCards,
