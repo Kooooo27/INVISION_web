@@ -232,11 +232,13 @@ const App = () => {
 
     useEffect(() => {
         if (!isFirebaseReady || !firebaseUser) {
-            setIsDataLoaded(false);
+            setIsDataLoaded(true); // Allow guest mode immediately
             return;
         }
 
+        // On login, reset local state to prevent guest data leakage
         setIsDataLoaded(false);
+        dispatch({ type: ACTION_TYPES.RESET_STATE });
 
         db.collection('users').doc(firebaseUser.uid).get()
             .then(doc => {
@@ -607,6 +609,12 @@ const App = () => {
 
             {!showSplash && !showDisclaimer && !showIOSPrompt && (
                 <motion.div key="main" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                    {/* Data Sync Loading Overlay */}
+                    {firebaseUser && !isDataLoaded && (
+                        <div className="fixed inset-0 z-[70] bg-obsidian/90 backdrop-blur-sm flex items-center justify-center">
+                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold"></div>
+                        </div>
+                    )}
                     <Header
                         currentPage={currentPage}
                         onNavigate={handleNavigate}
