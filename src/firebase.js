@@ -6,13 +6,13 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyAxr2BB2pOPTGENaMHgyVqUne0AjX9LQkI",
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "invison-demo.firebaseapp.com",
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "invison-demo",
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "invison-demo.firebasestorage.app",
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "836688239433",
-    appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:836688239433:web:fed3a1fedc790d6a909898",
-    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-F6H4QZGGQ4"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase if config is present
