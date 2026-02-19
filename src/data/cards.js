@@ -1,7 +1,7 @@
 // INVISION Learning Cards - Production Edition
 // Total: 522 cards across 10 categories + 112 bundle-exclusive cards
 
-const briefingCards = [
+export const briefingCards = [
     // ============================================
     // 基礎 (Foundation) - 65 cards
     // ============================================
@@ -497,7 +497,7 @@ const briefingCards = [
 
 // Pro-exclusive chart pattern card images/descriptions
 
-const chartPatternDescriptions = {
+export const chartPatternDescriptions = {
     head_and_shoulders: '左肩→頭→右肩の3つのピークで構成。頭が最高点。',
     inverse_head_and_shoulders: '左肩→頭→右肩の3つの谷で構成。頭が最安点。',
     double_top: 'M字型。2つの同水準の高値を形成後、下落。',
@@ -548,7 +548,7 @@ const chartPatternDescriptions = {
 // INDEX INVESTING BUNDLE - EXCLUSIVE CONTENT
 // ~42 cards with enriched, detailed explanations
 // ============================================
-const indexBundleCards = [
+export const indexBundleCards = [
     // Step 1: インデックス投資を知る (7 cards)
     {
         id: 5001,
@@ -1130,7 +1130,7 @@ const indexBundleCards = [
 // CRYPTO BUNDLE - EXCLUSIVE CONTENT
 // 50 cards for crypto beginners
 // ============================================
-const cryptoBundleCards = [
+export const cryptoBundleCards = [
     // Step 1: ブロックチェーンを理解する (6 cards)
     { id: 6001, category: '仮想通貨', level: 1, title: 'ブロックチェーンとは何か', icon: '🔗', content: 'ブロックチェーンは、取引データを「ブロック」という単位でまとめ、それを時系列に「チェーン（鎖）」のように繋げて記録する技術です。一度記録されたデータは改ざんが極めて困難で、中央管理者なしでも信頼性を担保できます。銀行のような仲介者がいなくても、世界中の誰とでも直接取引できる仕組みを実現しました。', terms: [{ word: 'ブロック', def: '取引データをまとめた記録単位' }] },
     { id: 6002, category: '仮想通貨', level: 1, title: '分散型台帳の仕組み', icon: '📒', content: '従来のシステムでは銀行などが取引記録を一元管理していましたが、ブロックチェーンでは世界中のコンピュータ（ノード）が同じ台帳を共有します。これを「分散型台帳」と呼びます。一箇所が攻撃されても、他のノードに記録が残るため、システム全体が停止することはありません。この冗長性がブロックチェーンの堅牢性を支えています。', terms: [{ word: 'ノード', def: 'ブロックチェーンネットワークに参加するコンピュータ' }] },
@@ -1199,12 +1199,4 @@ const cryptoBundleCards = [
     { id: 6049, category: '仮想通貨', level: 2, title: 'Web3.0の未来', icon: '🌐', content: 'Web3.0は、ブロックチェーンを基盤とした分散型インターネットのビジョンです。GAFAのような巨大企業がデータを独占するWeb2.0に対し、ユーザー自身がデータを所有・管理する世界を目指します。DAO、DeFi、NFTはその構成要素です。まだ発展途上ですが、インターネットの新しい形として注目されています。', terms: [{ word: 'Web3.0', def: '分散型の次世代インターネット構想' }] },
     { id: 6050, category: '仮想通貨', level: 1, title: '仮想通貨投資の心構え', icon: '🎯', content: '仮想通貨は非常にハイリスクな資産クラスです。①「なくなっても良いお金」で投資する、②ポートフォリオの一部（5〜10%以下推奨）に留める、③長期目線で考える、④よく調べてから投資する、⑤詐欺に注意する。「必ず儲かる」話はありません。リスクを理解し、自己責任で判断してください。', terms: [] }
 ];
-
-// Export for use in HTML
-if (typeof window !== 'undefined') {
-    window.briefingCards = briefingCards;
-    window.chartPatternDescriptions = chartPatternDescriptions;
-    window.indexBundleCards = indexBundleCards;
-    window.cryptoBundleCards = cryptoBundleCards;
-}
 

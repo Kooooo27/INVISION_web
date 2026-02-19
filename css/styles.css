@@ -1,0 +1,368 @@
+        /* ============================================
+           DESIGN TOKENS
+           ============================================ */
+        :root {
+            /* Colors - Primary */
+            --color-gold: #C9A227;
+            --color-gold-light: #E8D068;
+            --color-gold-dark: #9A7B1E;
+
+            /* Colors - Neutral */
+            --color-obsidian: #050505;
+            --color-ash: #1A1A1A;
+            --color-platinum: #E8E8E8;
+            --color-dim: #6B7280;
+
+            /* Colors - Semantic */
+            --color-success: #10B981;
+            --color-warning: #F59E0B;
+            --color-error: #EF4444;
+            --color-info: #3B82F6;
+
+            /* Spacing Scale (4px base) */
+            --space-1: 0.25rem;
+            /* 4px */
+            --space-2: 0.5rem;
+            /* 8px */
+            --space-3: 0.75rem;
+            /* 12px */
+            --space-4: 1rem;
+            /* 16px */
+            --space-5: 1.25rem;
+            /* 20px */
+            --space-6: 1.5rem;
+            /* 24px */
+            --space-8: 2rem;
+            /* 32px */
+            --space-10: 2.5rem;
+            /* 40px */
+            --space-12: 3rem;
+            /* 48px */
+            --space-16: 4rem;
+            /* 64px */
+
+            /* Typography Scale */
+            --text-xs: 0.75rem;
+            /* 12px */
+            --text-sm: 0.875rem;
+            /* 14px */
+            --text-base: 1rem;
+            /* 16px */
+            --text-lg: 1.125rem;
+            /* 18px */
+            --text-xl: 1.25rem;
+            /* 20px */
+            --text-2xl: 1.5rem;
+            /* 24px */
+            --text-3xl: 1.875rem;
+            /* 30px */
+            --text-4xl: 2.25rem;
+            /* 36px */
+
+            /* Border Radius */
+            --radius-sm: 2px;
+            --radius-md: 4px;
+            --radius-lg: 8px;
+            --radius-full: 9999px;
+
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-normal: 300ms ease;
+            --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--color-obsidian);
+            color: var(--color-platinum);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+        }
+
+        /* ============================================
+           SCROLLBAR STYLES
+           ============================================ */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-obsidian);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: var(--radius-sm);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-gold);
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-full);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(201, 162, 39, 0.3);
+            border-radius: var(--radius-full);
+        }
+
+        /* ============================================
+           BUTTON STYLES
+           ============================================ */
+        .btn-sharp {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all var(--transition-slow);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-sharp:hover {
+            border-color: rgba(201, 162, 39, 0.4);
+            color: var(--color-gold);
+            background: rgba(201, 162, 39, 0.03);
+        }
+
+        .btn-primary {
+            background: var(--color-gold);
+            color: var(--color-obsidian);
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-gold-light);
+            box-shadow: 0 0 20px rgba(201, 162, 39, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--color-platinum);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--color-error);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .btn-danger:hover {
+            background: var(--color-error);
+            color: white;
+        }
+
+        /* ============================================
+           INPUT STYLES
+           ============================================ */
+        .input-base {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            padding: var(--space-3) var(--space-4);
+            color: var(--color-platinum);
+            font-size: var(--text-sm);
+            transition: border-color var(--transition-normal);
+            outline: none;
+        }
+
+        .input-base:focus {
+            border-color: var(--color-gold);
+        }
+
+        .input-base::placeholder {
+            color: var(--color-dim);
+        }
+
+        /* ============================================
+           TYPOGRAPHY
+           ============================================ */
+        .text-gold-gradient {
+            background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-label {
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-dim);
+        }
+
+        /* ============================================
+           EFFECTS
+           ============================================ */
+        .grain::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.15;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
+
+        .custom-shadow {
+            box-shadow: var(--shadow-xl);
+        }
+
+        .subtle-border {
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        /* Luxury glow effects */
+        .luxury-glow {
+            box-shadow:
+                0 0 80px rgba(201, 162, 39, 0.1),
+                0 0 120px rgba(201, 162, 39, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .luxury-glow::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(105deg,
+                    transparent 20%,
+                    rgba(255, 255, 255, 0.03) 25%,
+                    transparent 30%);
+            animation: shimmer 8s infinite;
+        }
+
+        .luxury-glow:hover {
+            box-shadow:
+                0 0 100px rgba(201, 162, 39, 0.15),
+                0 0 150px rgba(201, 162, 39, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Frosted glass effect */
+        .glass-panel {
+            background: linear-gradient(135deg, rgba(28, 28, 28, 0.8), rgba(18, 18, 18, 0.6));
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 0 80px rgba(201, 162, 39, 0.03);
+        }
+
+        /* ============================================
+           ERROR / FEEDBACK STYLES
+           ============================================ */
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: var(--radius-sm);
+            padding: var(--space-3) var(--space-4);
+            color: var(--color-error);
+            font-size: var(--text-sm);
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: var(--radius-sm);
+            padding: var(--space-3) var(--space-4);
+            color: var(--color-success);
+            font-size: var(--text-sm);
+        }
+
+        .warning-message {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: var(--radius-sm);
+            padding: var(--space-3) var(--space-4);
+            color: var(--color-warning);
+            font-size: var(--text-sm);
+        }
+
+        /* Radar Chart Animations */
+        @keyframes radarDraw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes radarFadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* iOS Install Prompt */
+        .ios-share-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border: 2px solid #C9A227;
+            border-radius: 6px;
+            font-size: 16px;
+        }
