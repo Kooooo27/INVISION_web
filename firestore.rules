@@ -1,0 +1,61 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    /* 
+      =========================================================
+      INVISION Firestore Security Rules (Production)
+      =========================================================
+    */
+
+    // Helper: Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper: Check if user is accessing their own document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // 1. Users Collection
+    // - Everyone can read basic profiles (if public features exist)
+    // - Only owner can write/update their own profile
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // 2. Customers Collection (Stripe Extension)
+    // - Only owner can read their customer data (subscription status)
+    // - Writes are handled by Stripe Extension via Cloud Functions (admin SDK), 
+    //   but client-side writes to 'checkout_sessions' are needed to start payment.
+    match /customers/{uid} {
+      allow read: if isOwner(uid);
+
+      match /checkout_sessions/{id} {
+        allow read, write: if isOwner(uid);
+      }
+      
+      match /subscriptions/{id} {
+        allow read: if isOwner(uid);
+      }
+      
+      match /payments/{id} {
+        allow read: if isOwner(uid);
+      }
+    }
+
+    // 3. Products/Prices (Stripe Extension)
+    // - Publicly readable so the app can display prices
+    // - Read-only for everyone (managed via Stripe dashboard)
+    match /products/{id} {
+      allow read: if true;
+
+      match /prices/{id} {
+        allow read: if true;
+      }
+      match /tax_rates/{id} {
+        allow read: if true;
+      }
+    }
+  }
+}

@@ -31,7 +31,8 @@ if (firebaseConfig.apiKey) {
         console.error("Firebase init failed:", e);
     }
 } else {
-    console.log("⚠️ No Firebase config found. Running in Demo Mode.");
+    console.warn("⚠️ No Firebase config found. VITE_FIREBASE_API_KEY is missing/empty.");
+    console.log("Config dump (keys only):", Object.keys(firebaseConfig));
 }
 
 export { auth, db, isFirebaseReady, firebase };
