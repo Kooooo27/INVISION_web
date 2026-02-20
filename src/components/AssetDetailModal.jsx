@@ -59,24 +59,22 @@ const AssetDetailModal = ({ asset, onClose }) => {
                     )}
 
                     {asset.brokers && (
-                        <div className="bg-gradient-to-br from-gold/10 to-amber-500/5 border border-gold/30 rounded-sm p-5">
-                            <p className="text-xs text-gold uppercase tracking-wider mb-4 font-bold flex items-center gap-2">REFERENCE BROKER</p>
-                            <div className="space-y-3">
+                        <div className="border border-white/5 rounded-sm p-4">
+                            <p className="text-[10px] text-dim uppercase tracking-wider mb-3">REFERENCE</p>
+                            <div className="space-y-2">
                                 {asset.brokers.map((broker, i) => (
                                     <a key={i} href={broker.url} target="_blank" rel="noopener noreferrer"
-                                        className="block bg-ash/50 border border-white/10 rounded-sm p-4 hover:border-gold/50 transition-all group">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <span className="text-lg font-bold text-platinum group-hover:text-gold transition-colors">{broker.name}</span>
-                                            {broker.recommended && <span className="text-[10px] bg-gold text-black px-2 py-0.5 rounded-sm font-bold">参考</span>}
+                                        className="block border border-white/5 rounded-sm px-3 py-2.5 hover:border-white/15 transition-all group">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm text-platinum/60 group-hover:text-platinum transition-colors">{broker.name}</span>
+                                            <span className="text-[10px] text-dim group-hover:text-platinum/50 transition-colors">→</span>
                                         </div>
-                                        <p className="text-sm text-platinum/70">{broker.feature}</p>
-                                        <p className="text-xs text-gold mt-2">口座開設はこちら →</p>
+                                        <p className="text-[10px] text-dim mt-0.5">{broker.feature}</p>
                                     </a>
                                 ))}
                             </div>
-                            <p className="text-[10px] text-dim mt-3">
-                                ※ 外部サイトへ遷移します。投資勧誘を目的としたものではありません。<br />
-                                ※ 本リンクは提携サービスへの案内を含みます
+                            <p className="text-[9px] text-dim/50 mt-2">
+                                ※ 外部サイトへ遷移します。投資勧誘を目的としたものではありません。
                             </p>
                         </div>
                     )}

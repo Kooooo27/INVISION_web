@@ -263,12 +263,10 @@ const PortfolioCreator = () => {
                             )}
                         </div>
 
-                        {/* Recommended Brokers based on Allocation */}
-                        <div className="mt-8 pt-8 border-t border-white/10">
-                            <h3 className="text-sm font-bold text-platinum mb-4 flex items-center gap-2">
-                                <span>REFERENCE BROKER</span>
-                            </h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Reference Brokers (Supplementary) */}
+                        <div className="mt-6 pt-6 border-t border-white/5">
+                            <p className="text-[10px] text-dim uppercase tracking-wider mb-3">REFERENCE</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {(() => {
                                     const recs = [];
                                     // Base recommendation
@@ -292,17 +290,17 @@ const PortfolioCreator = () => {
 
                                     return recs.slice(0, 4).map((b, i) => (
                                         <a key={i} href={b.url} target="_blank" rel="noopener noreferrer"
-                                            className="bg-ash/50 border border-white/5 p-4 rounded-sm hover:border-gold/30 hover:bg-white/5 transition-all flex justify-between items-center group">
+                                            className="border border-white/5 px-4 py-3 rounded-sm hover:border-white/15 transition-all flex justify-between items-center group">
                                             <div>
-                                                <p className="font-bold text-platinum group-hover:text-gold transition-colors text-sm">{b.name}</p>
+                                                <p className="text-sm text-platinum/60 group-hover:text-platinum transition-colors">{b.name}</p>
                                                 <p className="text-[10px] text-dim">{b.desc}</p>
                                             </div>
-                                            <span className="text-gold opacity-0 group-hover:opacity-100 transition-opacity translate-x-[-10px] group-hover:translate-x-0 duration-300">→</span>
+                                            <span className="text-dim opacity-0 group-hover:opacity-60 transition-opacity">→</span>
                                         </a>
                                     ));
                                 })()}
                             </div>
-                            <p className="text-[10px] text-dim mt-3">※ リンク先は各証券会社の公式サイトです。</p>
+                            <p className="text-[9px] text-dim/50 mt-2">※ 各証券会社の公式サイトへ遷移します。</p>
                         </div>
                     </motion.div>
                 </div>

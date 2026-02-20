@@ -442,24 +442,23 @@ const PortfolioCalibration = () => {
                         </div>
                     </div>
 
-                    {/* Recommended Brokers Section */}
-                    <div className="bg-gradient-to-br from-gold/10 to-amber-500/5 border border-gold/30 rounded-sm p-6 mb-8">
-                        <p className="text-xs text-gold uppercase tracking-wider mb-4 font-bold">RECOMMENDED BROKER</p>
-                        <p className="text-sm text-platinum/70 mb-4">投資を始めるには証券口座が必要です。ご自身で選んで開設しましょう。</p>
-                        <div className="space-y-3">
+                    {/* Reference Brokers (Supplementary) */}
+                    <div className="border border-white/5 rounded-sm p-5 mb-8">
+                        <p className="text-[10px] text-dim uppercase tracking-wider mb-3">REFERENCE</p>
+                        <p className="text-xs text-dim mb-3">投資を始めるには証券口座が必要です。以下は参考情報です。</p>
+                        <div className="space-y-2">
                             {recommendedBrokers.map((broker, i) => (
                                 <a key={i} href={broker.url} target="_blank" rel="noopener noreferrer"
-                                    className="block bg-ash/50 border border-white/10 rounded-sm p-4 hover:border-gold/50 transition-all group">
-                                    <div className="flex items-center justify-between mb-1">
-                                        <span className="text-lg font-bold text-platinum group-hover:text-gold transition-colors">{broker.name}</span>
-                                        {broker.recommended && <span className="text-[10px] bg-gold text-black px-2 py-0.5 rounded-sm font-bold">参考</span>}
+                                    className="block border border-white/5 rounded-sm px-4 py-3 hover:border-white/15 transition-all group">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-sm text-platinum/70 group-hover:text-platinum transition-colors">{broker.name}</span>
+                                        <span className="text-[10px] text-dim group-hover:text-platinum/50 transition-colors">→</span>
                                     </div>
-                                    <p className="text-sm text-platinum/60">{broker.feature}</p>
+                                    <p className="text-[10px] text-dim mt-0.5">{broker.feature}</p>
                                 </a>
                             ))}
                         </div>
-                        <p className="text-[10px] text-dim mt-3">※ 外部サイトへ遷移します。口座開設はすべて無料です。</p>
-                        <p className="text-[10px] text-dim">※ 本情報は投資勧誘を目的としたものではありません。最終的な投資判断はご自身でお願いします。</p>
+                        <p className="text-[9px] text-dim/50 mt-2">※ 外部サイトへ遷移します。投資勧誘を目的としたものではありません。</p>
                     </div>
 
                     <ShareResultImage profile={profile} />

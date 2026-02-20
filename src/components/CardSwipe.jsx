@@ -77,7 +77,7 @@ const CardSwipe = ({
 
             {/* Swipe Card */}
             {currentCard ? (
-                <div className="relative h-[360px] sm:h-[420px] md:h-[480px] mb-10">
+                <div className="relative aspect-square max-w-[480px] mx-auto mb-10">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={currentCard.id}
@@ -138,7 +138,7 @@ const CardSwipe = ({
                     </AnimatePresence>
                 </div>
             ) : (
-                <div className="h-[360px] sm:h-[420px] md:h-[480px] flex items-center justify-center glass-panel rounded-sm">
+                <div className="aspect-square max-w-[480px] mx-auto flex items-center justify-center glass-panel rounded-sm">
                     <div className="text-center">
                         <p className="text-white/30 text-sm mb-4">
                             {activeRoadmapFilter ? "このロードマップは完了です" : "すべて完了しました"}

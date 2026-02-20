@@ -141,11 +141,6 @@ const AppInner = () => {
     }, [dispatch]);
 
     const handleSetPlan = (plan) => {
-        if (isFirebaseReady && (plan === 'light' || plan === 'complete')) {
-            // TODO: Re-implement with new payment provider
-            showToast('決済システム準備中です。もうしばらくお待ちください。', 'info');
-            return;
-        }
         dispatch({ type: ACTION_TYPES.SET_PLAN, payload: plan });
     };
 
@@ -170,12 +165,7 @@ const AppInner = () => {
     }, [dispatch]);
 
     const handlePurchaseBundle = (bundleId) => {
-        if (isFirebaseReady) {
-            // TODO: Re-implement with new payment provider
-            showToast('決済システム準備中です。もうしばらくお待ちください。', 'info');
-        } else {
-            dispatch({ type: ACTION_TYPES.PURCHASE_BUNDLE, payload: bundleId });
-        }
+        dispatch({ type: ACTION_TYPES.PURCHASE_BUNDLE, payload: bundleId });
     };
 
     const handleUpdateLimits = useCallback((limits) => {
