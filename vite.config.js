@@ -20,10 +20,6 @@ export default defineConfig({
                         if (id.includes('firebase') || id.includes('@firebase')) {
                             return 'vendor-firebase';
                         }
-                        // Stripe
-                        if (id.includes('stripe')) {
-                            return 'vendor-stripe';
-                        }
                     }
                 },
             },

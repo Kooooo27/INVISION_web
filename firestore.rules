@@ -24,38 +24,7 @@ service cloud.firestore {
       allow read, write: if isOwner(userId);
     }
 
-    // 2. Customers Collection (Stripe Extension)
-    // - Only owner can read their customer data (subscription status)
-    // - Writes are handled by Stripe Extension via Cloud Functions (admin SDK), 
-    //   but client-side writes to 'checkout_sessions' are needed to start payment.
-    match /customers/{uid} {
-      allow read: if isOwner(uid);
-
-      match /checkout_sessions/{id} {
-        allow read, write: if isOwner(uid);
-      }
-      
-      match /subscriptions/{id} {
-        allow read: if isOwner(uid);
-      }
-      
-      match /payments/{id} {
-        allow read: if isOwner(uid);
-      }
-    }
-
-    // 3. Products/Prices (Stripe Extension)
-    // - Publicly readable so the app can display prices
-    // - Read-only for everyone (managed via Stripe dashboard)
-    match /products/{id} {
-      allow read: if true;
-
-      match /prices/{id} {
-        allow read: if true;
-      }
-      match /tax_rates/{id} {
-        allow read: if true;
-      }
-    }
+    // Customers / Products rules removed (Stripe Extension no longer active)
+    // TODO: Re-add rules for new payment provider when ready
   }
 }

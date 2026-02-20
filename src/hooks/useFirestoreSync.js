@@ -12,39 +12,8 @@ export const useFirestoreSync = ({ firebaseUser, state, dispatch, ACTION_TYPES, 
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const prevUserRef = useRef(undefined); // undefined = initial, null = logged out
 
-    // 1. Purchase Sync Listener (Firestore -> App)
-    useEffect(() => {
-        if (!isFirebaseReady || !firebaseUser) return;
-
-        // (A) Annual Subscriptions
-        const subUnsub = db.collection('customers').doc(firebaseUser.uid)
-            .collection('subscriptions')
-            .where('status', 'in', ['active', 'trialing'])
-            .onSnapshot(snap => {
-                if (!snap.empty) {
-                    dispatch({ type: ACTION_TYPES.SET_PLAN, payload: 'annual' });
-                }
-            });
-
-        // (B) One-time Payments (Lifetime / Single)
-        const payUnsub = db.collection('customers').doc(firebaseUser.uid)
-            .collection('payments')
-            .where('status', '==', 'succeeded')
-            .onSnapshot(snap => {
-                snap.docs.forEach(doc => {
-                    const data = doc.data();
-                    const meta = data.metadata || {};
-
-                    if (meta.firebaseRole === 'lifetime' || meta.firebaseRole === 'lifetime-upgrade') {
-                        dispatch({ type: ACTION_TYPES.SET_PLAN, payload: 'lifetime' });
-                    } else if (meta.firebaseRole === 'roadmap' && meta.targetRoadmap) {
-                        dispatch({ type: ACTION_TYPES.PURCHASE_BUNDLE, payload: meta.targetRoadmap });
-                    }
-                });
-            });
-
-        return () => { subUnsub(); payUnsub(); };
-    }, [firebaseUser, dispatch, ACTION_TYPES]);
+    // 1. Purchase Sync Listener — removed (Stripe Extension no longer active)
+    // TODO: Re-implement with new payment provider when ready
 
     // 2. User Data Load
     useEffect(() => {

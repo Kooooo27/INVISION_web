@@ -62,7 +62,7 @@ const AppInner = () => {
     const { state, dispatch, savedState } = useAppReducer();
 
     const {
-        firebaseUser, handleFirebaseLogin, handleFirebaseLogout, createCheckoutSession
+        firebaseUser, handleFirebaseLogin, handleFirebaseLogout
     } = useAuth({ dispatch, ACTION_TYPES, savedState, showToast });
 
     const { isDataLoaded } = useFirestoreSync({
@@ -141,11 +141,10 @@ const AppInner = () => {
     }, [dispatch]);
 
     const handleSetPlan = (plan) => {
-        if (isFirebaseReady) {
-            if (plan === 'light' || plan === 'complete') {
-                createCheckoutSession(plan);
-                return;
-            }
+        if (isFirebaseReady && (plan === 'light' || plan === 'complete')) {
+            // TODO: Re-implement with new payment provider
+            showToast('決済システム準備中です。もうしばらくお待ちください。', 'info');
+            return;
         }
         dispatch({ type: ACTION_TYPES.SET_PLAN, payload: plan });
     };
@@ -172,7 +171,8 @@ const AppInner = () => {
 
     const handlePurchaseBundle = (bundleId) => {
         if (isFirebaseReady) {
-            createCheckoutSession('roadmap', bundleId);
+            // TODO: Re-implement with new payment provider
+            showToast('決済システム準備中です。もうしばらくお待ちください。', 'info');
         } else {
             dispatch({ type: ACTION_TYPES.PURCHASE_BUNDLE, payload: bundleId });
         }
