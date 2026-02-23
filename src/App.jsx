@@ -10,6 +10,7 @@ import SplashScreen from './components/SplashScreen';
 import IOSInstallPrompt from './components/IOSInstallPrompt';
 import SettingsModal from './components/SettingsModal';
 import { ToastProvider, useToast } from './components/Toast';
+import PasswordGate from './components/PasswordGate';
 
 // Context & Hooks
 import { AppContext } from './contexts/AppContext';
@@ -38,9 +39,11 @@ const PATH_TO_PAGE = Object.fromEntries(
 
 const App = () => {
     return (
-        <ToastProvider>
-            <AppInner />
-        </ToastProvider>
+        <PasswordGate>
+            <ToastProvider>
+                <AppInner />
+            </ToastProvider>
+        </PasswordGate>
     );
 };
 
